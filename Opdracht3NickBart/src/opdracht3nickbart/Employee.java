@@ -2,13 +2,13 @@ package opdracht3nickbart;
 
 import javafx.beans.property.SimpleStringProperty;
 
- public class Person {
+ public class Employee {
  
         private final SimpleStringProperty firstName;
         private final SimpleStringProperty lastName;
         private final SimpleStringProperty email;
  
-        Person(String fName, String lName, String email) {
+        public Employee(String fName, String lName, String email) {
             this.firstName = new SimpleStringProperty(fName);
             this.lastName = new SimpleStringProperty(lName);
             this.email = new SimpleStringProperty(email);
