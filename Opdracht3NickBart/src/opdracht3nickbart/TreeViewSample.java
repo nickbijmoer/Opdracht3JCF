@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 public class TreeViewSample extends Application {
     
     Stage window;
-    TreeView<String> tree;
+    TreeView<Department> tree;
     /**
      * @param args the command line arguments
      */
@@ -35,24 +35,17 @@ public class TreeViewSample extends Application {
         window = primaryStage;
         window.setTitle("JavaFX - TreeView");
         
-        TreeItem<String> root,  Fontys, Avans;
-        
-        //Root
-        root = new TreeItem<>();
-        root.setExpanded(true);
+        TreeItem<Department> Fontys,  ICT, Design;
         
         //Fontys branch
-        Fontys = makeBranch("Fontys ICT", root);
+        Fontys = new TreeItem<Department>();
         makeBranch("Students", Fontys);
         makeBranch("Teachers", Fontys);
         
-        //Avans branch
-        Avans = makeBranch("Avans ICT", root);
-        makeBranch("Students", Avans);
-        makeBranch("Teachers", Avans);
+        
         
         //Create tree
-        tree = new TreeView<>(root);
+        tree = new TreeView<>(Fontys);
         tree.setShowRoot(false);
         
         //Layout
@@ -64,9 +57,8 @@ public class TreeViewSample extends Application {
     }
 
     //Create branches
-    public TreeItem<String> makeBranch(String title, TreeItem<String> parent){
-        TreeItem<String> item = new TreeItem<>(title);
-        item.setExpanded(true);
+    public TreeItem<Department> makeBranch(String title, TreeItem<Department> parent){
+        TreeItem<Department> item = new TreeItem<>(new Department(title));
         parent.getChildren().add(item);
         return item;
     }
