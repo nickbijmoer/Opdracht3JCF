@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opdracht3nickbart;
+package jcf;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -21,8 +21,8 @@ import javafx.stage.Stage;
  */
 public class TreeViewSample extends Application {
     
+    TreeView<Department> tree;
     Stage window;
-    TreeView<String> tree;
     /**
      * @param args the command line arguments
      */
@@ -35,25 +35,18 @@ public class TreeViewSample extends Application {
         window = primaryStage;
         window.setTitle("JavaFX - TreeView");
         
-        TreeItem<String> root,  Fontys, Avans;
+        TreeItem<Department> Fontys, Avans; 
         
-        //Root
-        root = new TreeItem<>();
-        root.setExpanded(true);
-        
-        //Fontys branch
-        Fontys = makeBranch("Fontys ICT", root);
+        //ICT
+        Fontys = new TreeItem<Department>();
         makeBranch("Students", Fontys);
         makeBranch("Teachers", Fontys);
         
-        //Avans branch
-        Avans = makeBranch("Avans ICT", root);
-        makeBranch("Students", Avans);
-        makeBranch("Teachers", Avans);
+        //Student branch
+        
+        //Teacher branch
         
         //Create tree
-        tree = new TreeView<>(root);
-        tree.setShowRoot(false);
         
         //Layout
         StackPane layout = new StackPane();
@@ -64,9 +57,8 @@ public class TreeViewSample extends Application {
     }
 
     //Create branches
-    public TreeItem<String> makeBranch(String title, TreeItem<String> parent){
-        TreeItem<String> item = new TreeItem<>(title);
-        item.setExpanded(true);
+    public TreeItem<Department> makeBranch(String title, TreeItem<Department> parent){
+        TreeItem<Department> item = new TreeItem<Department>(new Department(title));
         parent.getChildren().add(item);
         return item;
     }
