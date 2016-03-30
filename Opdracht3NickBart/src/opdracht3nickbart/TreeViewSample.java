@@ -47,7 +47,7 @@ public class TreeViewSample {
         Stage stage = new Stage();
         rootNode.setExpanded(true);
         for (Employee employee : employees) {
-            TreeItem<String> empLeaf = new TreeItem<String>(employee.getName());
+            TreeItem<String> empLeaf = new TreeItem<String>(employee.getFirstName());
             boolean found = false;
             for (TreeItem<String> depNode : rootNode.getChildren()) {
                 if (depNode.getValue().contentEquals(employee.getDepartment())){

@@ -7,11 +7,22 @@ import javafx.beans.property.SimpleStringProperty;
         private final SimpleStringProperty firstName;
         private final SimpleStringProperty lastName;
         private final SimpleStringProperty email;
+        private final SimpleStringProperty department;
  
         public Employee(String fName, String lName, String email) {
             this.firstName = new SimpleStringProperty(fName);
             this.lastName = new SimpleStringProperty(lName);
             this.email = new SimpleStringProperty(email);
+            this.department = new SimpleStringProperty("");
+        }
+        
+        public Employee(String Name, String Department)
+        {
+            this.firstName = new SimpleStringProperty(Name);
+            this.department = new SimpleStringProperty(Department);
+            
+            this.lastName = new SimpleStringProperty("");
+            this.email = new SimpleStringProperty("");
         }
  
         public String getFirstName() {
@@ -20,6 +31,14 @@ import javafx.beans.property.SimpleStringProperty;
  
         public void setFirstName(String fName) {
             firstName.set(fName);
+        }
+        
+        public String getDepartment() {
+            return department.get();
+        }
+ 
+        public void setDepartment(String Department) {
+            department.set(Department);
         }
  
         public String getLastName() {
