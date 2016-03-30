@@ -5,16 +5,41 @@
  */
 package opdracht3nickbart;
 
+import javafx.beans.property.SimpleStringProperty;
+
 /**
  *
  * @author Bart
  */
 public class Department {
     
-    private String name;
+    private final SimpleStringProperty name;
+    private final SimpleStringProperty city;
     
-    public Department (String Name)
+    public Department (String Name, String City)
     {
-        this.name = Name;
+        this.name = new SimpleStringProperty(Name);
+        this.city = new SimpleStringProperty(City);
     }
+    
+    public String getDepartmentName()
+    {
+        return name.get();
+    }
+    
+    public void setDepartmentName(String Name){
+        this.name.set(Name);
+    }
+    
+    public String getCity()
+    {
+        return name.get();
+    }
+    
+    public void setCity(String City)
+    {
+        this.city.set(City);
+    }
+    
+    
 }
