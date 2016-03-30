@@ -1,124 +1,109 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package opdracht3nickbart;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-/**
- *
- * @author Bart
- */
-public class TreeViewSample extends Application {
-
-    Stage window;
-    TreeView<String> tree;
-
-    private ObservableList<Department> data;
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        window = primaryStage;
-        window.setTitle("JavaFX - TreeView");
-
-        ArrayList<Department> temp = new ArrayList<Department>();
-        temp.add(new Department("ICT", "Eindhoven"));
-        temp.add(new Department("Design", "Tilburg"));
-        temp.add(new Department("Teachers", "Eindhoven"));
-        temp.add(new Department("Cleaning", "Eindhoven"));
-        temp.add(new Department("Kitchen", "Tilburg"));
-
-        data = FXCollections.observableArrayList(temp);
-        TreeItem<String> Fontys, root;
-
-        root = new TreeItem<>();
-        root.setExpanded(true);
-
-        //Fontys branch
-        Fontys = new TreeItem<String>("Fontys");
-        Fontys.setExpanded(true);
-
-        for (Department item : data) {
-            TreeItem<String> empLeaf = new TreeItem<>(item.getDepartmentName());
+import javafx.util.Callback;
+ 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.VBox;
+ 
+public class TreeViewSample {
+ 
+   
+   
+    List<Employee> employees = Arrays.<Employee>asList(
+            new Employee("Ethan Williams", "Sales Department"),
+            new Employee("Emma Jones", "Sales Department"),
+            new Employee("Michael Brown", "Sales Department"),
+            new Employee("Anna Black", "Sales Department"),
+            new Employee("Rodger York", "Sales Department"),
+            new Employee("Susan Collins", "Sales Department"),
+            new Employee("Mike Graham", "IT Support"),
+            new Employee("Judy Mayer", "IT Support"),
+            new Employee("Gregory Smith", "IT Support"),
+            new Employee("Jacob Smith", "Accounts Department"),
+            new Employee("Isabella Johnson", "Accounts Department"));
+    TreeItem<String> rootNode = 
+        new TreeItem<String>("MyCompany Human Resources");
+ 
+    public TreeViewSample() {
+        Stage stage = new Stage();
+        rootNode.setExpanded(true);
+        for (Employee employee : employees) {
+            TreeItem<String> empLeaf = new TreeItem<String>(employee.getName());
             boolean found = false;
-            if (Fontys.getChildren().size() > 0) {
-                for (TreeItem<String> depNode : Fontys.getChildren()) {
-                    if (depNode.getValue().contentEquals(item.getCity())) {
-                        depNode.getChildren().add(empLeaf);
-                        found = true;
-                        break;
-                    }
-                    if (!found) {
-                        TreeItem<String> depNodes = new TreeItem<String>(item.getCity());
-                        Fontys.getChildren().add(depNodes);
-                        depNodes.getChildren().add(empLeaf);
-                    }
+            for (TreeItem<String> depNode : rootNode.getChildren()) {
+                if (depNode.getValue().contentEquals(employee.getDepartment())){
+                    depNode.getChildren().add(empLeaf);
+                    found = true;
+                    break;
                 }
-            } else {
-                TreeItem<String> depNodes = new TreeItem<String>(item.getCity());
-                Fontys.getChildren().add(depNodes);
-                depNodes.getChildren().add(empLeaf);
+            }
+            if (!found) {
+                TreeItem depNode = new TreeItem(employee.getDepartment() 
+                );
+                rootNode.getChildren().add(depNode);
+                depNode.getChildren().add(empLeaf);
             }
         }
-
-        //Create tree
-        tree = new TreeView<>(root);
-        tree.setShowRoot(false);
-
-        //Layout
-        StackPane layout = new StackPane();
-        layout.getChildren().add(tree);
+ 
+        stage.setTitle("Tree View Sample");
         VBox box = new VBox();
-
-        TreeView<String> treeView = new TreeView<String>(root);
-
-        box.getChildren().add(treeView);
-        Scene scene = new Scene(layout, 300, 250);
-
+        final Scene scene = new Scene(box, 400, 300);
         scene.setFill(Color.LIGHTGRAY);
-        window.setScene(scene);
-        window.show();
-
+ 
+        TreeView<String> treeView = new TreeView<String>(rootNode);
+        treeView.setEditable(true);
+        treeView.setCellFactory(new Callback<TreeView<String>,TreeCell<String>>(){
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return new TextFieldTreeCellImpl();
+            }
+        });
+ 
+        box.getChildren().add(treeView);
+        stage.setScene(scene);
+        stage.show();
     }
-
+ 
     private final class TextFieldTreeCellImpl extends TreeCell<String> {
-
+ 
         private TextField textField;
-
+        private ContextMenu addMenu = new ContextMenu();
+ 
         public TextFieldTreeCellImpl() {
+            MenuItem addMenuItem = new MenuItem("Add Employee");
+            addMenu.getItems().add(addMenuItem);
+            addMenuItem.setOnAction(new EventHandler() {
+                public void handle(Event t) {
+                    TreeItem newEmployee = 
+                        new TreeItem<String>("New Employee");
+                            getTreeItem().getChildren().add(newEmployee);
+                }
+            });
         }
-
+ 
         @Override
         public void startEdit() {
             super.startEdit();
-
+ 
             if (textField == null) {
                 createTextField();
             }
@@ -126,37 +111,45 @@ public class TreeViewSample extends Application {
             setGraphic(textField);
             textField.selectAll();
         }
-
+ 
         @Override
         public void cancelEdit() {
             super.cancelEdit();
+ 
             setText((String) getItem());
             setGraphic(getTreeItem().getGraphic());
         }
-
+ 
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
-
+ 
             if (empty) {
                 setText(null);
                 setGraphic(null);
-            } else if (isEditing()) {
-                if (textField != null) {
-                    textField.setText(getString());
-                }
-                setText(null);
-                setGraphic(textField);
             } else {
-                setText(getString());
-                setGraphic(getTreeItem().getGraphic());
+                if (isEditing()) {
+                    if (textField != null) {
+                        textField.setText(getString());
+                    }
+                    setText(null);
+                    setGraphic(textField);
+                } else {
+                    setText(getString());
+                    setGraphic(getTreeItem().getGraphic());
+                    if (
+                        !getTreeItem().isLeaf()&&getTreeItem().getParent()!= null
+                    ){
+                        setContextMenu(addMenu);
+                    }
+                }
             }
         }
-
+        
         private void createTextField() {
             textField = new TextField(getString());
             textField.setOnKeyReleased(new EventHandler<KeyEvent>() {
-
+ 
                 @Override
                 public void handle(KeyEvent t) {
                     if (t.getCode() == KeyCode.ENTER) {
@@ -165,19 +158,12 @@ public class TreeViewSample extends Application {
                         cancelEdit();
                     }
                 }
-            });
+            });  
+            
         }
-
+ 
         private String getString() {
             return getItem() == null ? "" : getItem().toString();
         }
     }
-
-    //Create branches
-    public TreeItem<Department> makeBranch(Department title, TreeItem<Department> parent) {
-        TreeItem<Department> item = new TreeItem<>(title);
-        parent.getChildren().add(item);
-        return item;
-    }
-
 }
