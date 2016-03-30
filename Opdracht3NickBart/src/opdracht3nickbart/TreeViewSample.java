@@ -26,7 +26,8 @@ import javafx.scene.layout.VBox;
  
 public class TreeViewSample {
  
-   
+    private final Image depIcon = 
+        new Image(getClass().getResourceAsStream("department.png"));
    
     List<Employee> employees = Arrays.<Employee>asList(
             new Employee("Ethan Williams", "Sales Department"),
@@ -57,7 +58,8 @@ public class TreeViewSample {
                 }
             }
             if (!found) {
-                TreeItem depNode = new TreeItem(employee.getDepartment() 
+                TreeItem depNode = new TreeItem(employee.getDepartment(), 
+                    new ImageView(depIcon) 
                 );
                 rootNode.getChildren().add(depNode);
                 depNode.getChildren().add(empLeaf);
