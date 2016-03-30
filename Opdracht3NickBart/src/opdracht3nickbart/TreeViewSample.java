@@ -32,11 +32,9 @@ import javafx.stage.Stage;
 public class TreeViewSample extends Application {
 
     Stage window;
-    TreeView<Department> tree;
+    TreeView<String> tree;
 
     private ObservableList<Department> data;
-    
-    
 
     /**
      * @param args the command line arguments
@@ -58,28 +56,48 @@ public class TreeViewSample extends Application {
         temp.add(new Department("Kitchen", "Tilburg"));
 
         data = FXCollections.observableArrayList(temp);
-        TreeItem<Department> Fontys;
+        TreeItem<String> Fontys, root;
+
+        root = new TreeItem<>();
+        root.setExpanded(true);
 
         //Fontys branch
-        Fontys = new TreeItem<Department>();
+        Fontys = new TreeItem<String>("Fontys");
         Fontys.setExpanded(true);
 
         for (Department item : data) {
-            TreeItem<Department> newItem = new TreeItem<>(item);
-            Fontys.getChildren().add(newItem);
+            TreeItem<String> empLeaf = new TreeItem<>(item.getDepartmentName());
+            boolean found = false;
+            if (Fontys.getChildren().size() > 0) {
+                for (TreeItem<String> depNode : Fontys.getChildren()) {
+                    if (depNode.getValue().contentEquals(item.getCity())) {
+                        depNode.getChildren().add(empLeaf);
+                        found = true;
+                        break;
+                    }
+                    if (!found) {
+                        TreeItem<String> depNodes = new TreeItem<String>(item.getCity());
+                        Fontys.getChildren().add(depNodes);
+                        depNodes.getChildren().add(empLeaf);
+                    }
+                }
+            } else {
+                TreeItem<String> depNodes = new TreeItem<String>(item.getCity());
+                Fontys.getChildren().add(depNodes);
+                depNodes.getChildren().add(empLeaf);
+            }
         }
-        
 
         //Create tree
-        tree = new TreeView<>(Fontys);
-        tree.setShowRoot(true);
+        tree = new TreeView<>(root);
+        tree.setShowRoot(false);
 
         //Layout
         StackPane layout = new StackPane();
         layout.getChildren().add(tree);
         VBox box = new VBox();
 
-        TreeView<Department> treeView = new TreeView<Department>(Fontys);
+        TreeView<String> treeView = new TreeView<String>(root);
 
         box.getChildren().add(treeView);
         Scene scene = new Scene(layout, 300, 250);
@@ -89,18 +107,18 @@ public class TreeViewSample extends Application {
         window.show();
 
     }
-    
+
     private final class TextFieldTreeCellImpl extends TreeCell<String> {
- 
+
         private TextField textField;
-        
-         public TextFieldTreeCellImpl() {
+
+        public TextFieldTreeCellImpl() {
         }
- 
+
         @Override
         public void startEdit() {
             super.startEdit();
- 
+
             if (textField == null) {
                 createTextField();
             }
@@ -108,39 +126,37 @@ public class TreeViewSample extends Application {
             setGraphic(textField);
             textField.selectAll();
         }
- 
+
         @Override
         public void cancelEdit() {
             super.cancelEdit();
             setText((String) getItem());
             setGraphic(getTreeItem().getGraphic());
         }
- 
+
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
- 
+
             if (empty) {
                 setText(null);
                 setGraphic(null);
-            } else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                } else {
-                    setText(getString());
-                    setGraphic(getTreeItem().getGraphic());
+            } else if (isEditing()) {
+                if (textField != null) {
+                    textField.setText(getString());
                 }
+                setText(null);
+                setGraphic(textField);
+            } else {
+                setText(getString());
+                setGraphic(getTreeItem().getGraphic());
             }
         }
- 
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setOnKeyReleased(new EventHandler<KeyEvent>() {
- 
+
                 @Override
                 public void handle(KeyEvent t) {
                     if (t.getCode() == KeyCode.ENTER) {
@@ -151,13 +167,11 @@ public class TreeViewSample extends Application {
                 }
             });
         }
- 
+
         private String getString() {
             return getItem() == null ? "" : getItem().toString();
         }
     }
- 
-   
 
     //Create branches
     public TreeItem<Department> makeBranch(Department title, TreeItem<Department> parent) {

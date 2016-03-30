@@ -13,33 +13,35 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class Department {
     
-    private final SimpleStringProperty name;
-    private final SimpleStringProperty city;
+//    private final SimpleStringProperty name;
+//    private final SimpleStringProperty city;
+    private  String name;
+    private  String city;
     
     public Department (String Name, String City)
     {
-        this.name = new SimpleStringProperty(Name);
-        this.city = new SimpleStringProperty(City);
+//        this.name = new SimpleStringProperty(Name);
+//        this.city = new SimpleStringProperty(City);
+        this.name = Name;
+        this.city = City;
     }
     
     public String getDepartmentName()
     {
-        return name.get();
+        return name;
     }
     
     public void setDepartmentName(String Name){
-        this.name.set(Name);
+        this.name = Name;
     }
     
     public String getCity()
     {
-        return name.get();
+        return city;
     }
     
     public void setCity(String City)
     {
-        this.city.set(City);
+        this.city = City;
     }
-    
-    
 }
