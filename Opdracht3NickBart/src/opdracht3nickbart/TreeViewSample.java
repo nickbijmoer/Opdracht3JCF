@@ -1,5 +1,6 @@
 package opdracht3nickbart;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.application.Application;
@@ -20,6 +21,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
  
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
@@ -29,56 +32,59 @@ public class TreeViewSample {
     private final Image depIcon = 
         new Image(getClass().getResourceAsStream("departments.png"));
    
-    List<Employee> employees = Arrays.<Employee>asList(
-            new Employee("Ethan Williams", "Sales Department"),
-            new Employee("Emma Jones", "Sales Department"),
-            new Employee("Michael Brown", "Sales Department"),
-            new Employee("Anna Black", "Sales Department"),
-            new Employee("Rodger York", "Sales Department"),
-            new Employee("Susan Collins", "Sales Department"),
-            new Employee("Mike Graham", "IT Support"),
-            new Employee("Judy Mayer", "IT Support"),
-            new Employee("Gregory Smith", "IT Support"),
-            new Employee("Jacob Smith", "Accounts Department"),
-            new Employee("Isabella Johnson", "Accounts Department"));
-    TreeItem<String> rootNode = 
-        new TreeItem<String>("MyCompany Human Resources");
+    List<Employee> ICTpeople = Arrays.<Employee>asList(
+            new Employee("Ethan", "Williams", "William@hotmail.com"),
+            new Employee("Emma", "Jones", "Jones@hotmail.com"),
+            new Employee("Michael", "Brown", "Brown@hotmail.com"),
+            new Employee("Anna", "Black", "Black@hotmail.com"));
+            
+    List<Employee> SalesPeople = Arrays.<Employee>asList(
+            new Employee("Rodger", "York", "York@hotmail.com"),
+            new Employee("Susan", "Collins", "Collins@hotmail.com"),
+            new Employee("Mike", "Graham", "Graham@hotmail.com"),
+            new Employee("Judy", "Mayer", "Mayer@hotmail.com"));
+    
+    List<Employee> BusinessPeople = Arrays.<Employee>asList(
+            new Employee("Gregory", "Smith", "Smith@hotmail.com"),
+            new Employee("Jacob", "Smith", "j.smith@hotmail.com"),
+            new Employee("Isabella", "Johnson", "johnson@hotmail.com"));
+    
+     private final ObservableList<Department> data
+            = FXCollections.observableArrayList(
+            new Department("ICT", "Eindhoven", ICTpeople),
+            new Department("Sales", "Tilburg", SalesPeople),
+            new Department("Business", "Breda", BusinessPeople));
+    
+    TreeItem<Object> rootNode = 
+        new TreeItem<Object>(new Department());
  
     public TreeViewSample() {
         Stage stage = new Stage();
         rootNode.setExpanded(true);
-        for (Employee employee : employees) {
-            TreeItem<String> empLeaf = new TreeItem<String>(employee.getFirstName());
-            boolean found = false;
-            for (TreeItem<String> depNode : rootNode.getChildren()) {
-                if (depNode.getValue().contentEquals(employee.getDepartment())){
-                    depNode.getChildren().add(empLeaf);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                TreeItem depNode = new TreeItem(employee.getDepartment(), 
-                    new ImageView(depIcon) 
-                );
-                rootNode.getChildren().add(depNode);
+        for (Department department : data) {
+            TreeItem<Object> depNode = new TreeItem<>(department);
+            for(Employee employee : department.getEmployees())
+            {
+                TreeItem<Object> empLeaf = new TreeItem<>(employee);
                 depNode.getChildren().add(empLeaf);
             }
+            rootNode.getChildren().add(depNode);
         }
  
-        stage.setTitle("Tree View Sample");
+        stage.setTitle("Tree View");
         VBox box = new VBox();
         final Scene scene = new Scene(box, 400, 300);
         scene.setFill(Color.LIGHTGRAY);
- 
-        TreeView<String> treeView = new TreeView<String>(rootNode);
+        
+        TreeView<Object> treeView = new TreeView<Object>(rootNode);
+        treeView.setShowRoot(false);
         treeView.setEditable(true);
-        treeView.setCellFactory(new Callback<TreeView<String>,TreeCell<String>>(){
-            @Override
-            public TreeCell<String> call(TreeView<String> p) {
-                return new TextFieldTreeCellImpl();
-            }
-        });
+//        treeView.setCellFactory(new Callback<TreeView<Department>,TreeCell<Department>>(){
+//            @Override
+//            public TreeCell<Department> call(TreeView<Department> p) {
+//                return new TextFieldTreeCellImpl();
+//            }
+//        });
  
         box.getChildren().add(treeView);
         stage.setScene(scene);

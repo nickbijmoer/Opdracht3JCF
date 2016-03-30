@@ -5,6 +5,8 @@
  */
 package opdracht3nickbart;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -17,21 +19,28 @@ public class Department {
 //    private final SimpleStringProperty city;
     private  String name;
     private  String city;
+    private List<Employee> employees;
     
-    public Department (String Name, String City)
+    public Department (String Name, String City, List<Employee> Employees)
     {
 //        this.name = new SimpleStringProperty(Name);
 //        this.city = new SimpleStringProperty(City);
         this.name = Name;
         this.city = City;
+        employees = Employees;
     }
     
-    public String getDepartmentName()
+    public Department()
+    {
+        
+    }
+    
+    public String getName()
     {
         return name;
     }
     
-    public void setDepartmentName(String Name){
+    public void setName(String Name){
         this.name = Name;
     }
     
@@ -44,4 +53,20 @@ public class Department {
     {
         this.city = City;
     }
+    
+     public void setEmployee(List<Employee> employees)
+    {
+        this.employees = employees;
+    }
+     
+     public List<Employee> getEmployees()
+     {
+         return employees;
+     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+    
 }
