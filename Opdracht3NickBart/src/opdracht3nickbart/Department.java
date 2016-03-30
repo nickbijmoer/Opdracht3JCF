@@ -54,7 +54,7 @@ public class Department {
         this.city = City;
     }
     
-     public void setEmployee(List<Employee> employees)
+     public void setEmployees(List<Employee> employees)
     {
         this.employees = employees;
     }
@@ -62,6 +62,11 @@ public class Department {
      public List<Employee> getEmployees()
      {
          return employees;
+     }
+     
+     public void addEmployee(Employee employee)
+     {
+         employees.add(employee);
      }
 
     @Override
