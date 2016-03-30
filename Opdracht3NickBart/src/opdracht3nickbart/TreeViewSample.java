@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 public class TreeViewSample {
  
     private final Image depIcon = 
-        new Image(getClass().getResourceAsStream("department.png"));
+        new Image(getClass().getResourceAsStream("departments.png"));
    
     List<Employee> employees = Arrays.<Employee>asList(
             new Employee("Ethan Williams", "Sales Department"),
