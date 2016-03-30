@@ -9,7 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //TableViewSample c = new TableViewSample();
+        TableViewSample c = new TableViewSample();
         TreeViewSample tree = new TreeViewSample();
     }
 
